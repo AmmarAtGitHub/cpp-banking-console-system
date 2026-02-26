@@ -11,6 +11,15 @@ This project is being developed incrementally using 'clean code' principles and 
 - Enum-driven menu design
 - Client struct definition
 
+
+## Day 2 – File Handling & Display
+- Load clients from external file
+- Convert file records into structured objects
+- String parsing with custom delimiter
+- Display formatted client table
+- Separation of concerns (UI / File / Logic)
+
+
 ## Goals
-- Practice C++ fundamentals
+- Practice/enhance C++ fundamentals
 - Improve software design thinking
