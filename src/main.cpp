@@ -7,16 +7,6 @@
 
 using namespace std;
 
-/*
-    Banking Console System
-    Day 1: Base Architecture Setup
-
-    Goal:
-    - Define client data structure
-    - Define main menu enum
-    - Implement application loop
-*/
-
 const string CLIENTS_FILE = "../data/clients.txt";
 
 // Enum representing main menu options
@@ -44,6 +34,7 @@ struct Client {
 // Prints the main menu
 void PrintMainMenu()
 {
+    system("cls"); // to clear the screen before showing the clients list, it is windows specific, for linux use system("clear");
     cout << "\n=====================================\n";
     cout << "        Banking System - Main Menu\n";
     cout << "=====================================\n";
@@ -125,29 +116,29 @@ void PrintClients(const vector<Client>& clients)
     cout << "\nTotal Clients: " << clients.size() << "\n\n";
 
     cout << left
-         << setw(15) << "Account"
-         << setw(10) << "PIN"
-         << setw(25) << "Name"
-         << setw(15) << "Phone"
-         << setw(10) << "Balance"
-         << "\n";
+        << setw(15) << "Account"
+        << setw(10) << "PIN"
+        << setw(25) << "Name"
+        << setw(15) << "Phone"
+        << setw(10) << "Balance"
+        << "\n";
 
     cout << string(75, '-') << "\n";
 
     for (const Client& client : clients)
     {
         cout << left
-             << setw(15) << client.accountNumber
-             << setw(10) << client.pinCode
-             << setw(25) << client.name
-             << setw(15) << client.phone
-             << setw(10) << client.balance
-             << "\n";
+            << setw(15) << client.accountNumber
+            << setw(10) << client.pinCode
+            << setw(25) << client.name
+            << setw(15) << client.phone
+            << setw(10) << client.balance
+            << "\n";
     }
 
     cout << "\n";
 }
-
+// Screen to show all clients
 void ShowClientsScreen()
 {
     vector<Client> clients = LoadClientsFromFile();
@@ -158,7 +149,83 @@ void ShowClientsScreen()
     cin.get();
 }
 
+// Converts a Client struct into a single line string for file storage
+string ConvertClientToLine(const Client& client)
+{
+    return client.accountNumber + "#//#" +
+        client.pinCode + "#//#" +
+        client.name + "#//#" +
+        client.phone + "#//#" +
+        to_string(client.balance);
+}
 
+// Appends a new client to the clients file
+void SaveClientToFile(const Client& client)
+{
+    ofstream file(CLIENTS_FILE, ios::app); // append mode
+
+    if (file.is_open())
+    {
+        file << ConvertClientToLine(client) << endl;
+        file.close();
+    }
+}
+
+// Checks if an account number already exists in the clients list
+bool AccountExists(const string& accountNumber, const vector<Client>& clients)
+{
+    for (const Client& client : clients)
+    {
+        if (client.accountNumber == accountNumber)
+            return true;
+    }
+    return false;
+}
+
+// Reads client details from user input and returns a Client struct
+Client ReadNewClient()
+{
+    Client client;
+
+    cout << "Enter Account Number: ";
+    cin >> client.accountNumber;
+
+    cout << "Enter PIN Code: ";
+    cin >> client.pinCode;
+
+    cin.ignore(); // clear buffer before getline
+
+    cout << "Enter Full Name: ";
+    getline(cin, client.name);
+
+    cout << "Enter Phone: ";
+    getline(cin, client.phone);
+
+    cout << "Enter Initial Balance: ";
+    cin >> client.balance;
+
+    return client;
+}
+
+// Screen to add a new client
+void AddClientScreen()
+{
+    vector<Client> clients = LoadClientsFromFile();
+
+    cout << "\n=== Add New Client ===\n";
+
+    Client newClient = ReadNewClient();
+
+    if (AccountExists(newClient.accountNumber, clients))
+    {
+        cout << "Error: Account number already exists.\n";
+        return;
+    }
+
+    SaveClientToFile(newClient);
+
+    cout << "Client added successfully.\n";
+}
 
 
 
@@ -176,16 +243,20 @@ void RunApplication()
 
         switch (static_cast<MainMenuOption>(userChoice))
         {
-            case MainMenuOption::ShowClients:
-                ShowClientsScreen();
-                break;
+        case MainMenuOption::ShowClients:
+            ShowClientsScreen();
+            break;
 
-            case MainMenuOption::Exit:
-                cout << "Exiting program.\n";
-                break;
+        case MainMenuOption::AddClient:
+            AddClientScreen();
+            break;
 
-            default:
-                cout << "Feature not implemented yet.\n";
+        case MainMenuOption::Exit:
+            cout << "Exiting program.\n";
+            break;
+
+        default:
+            cout << "Feature not implemented yet.\n";
         }
 
     } while (userChoice != static_cast<short>(MainMenuOption::Exit));
