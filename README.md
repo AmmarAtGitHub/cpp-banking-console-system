@@ -19,6 +19,15 @@ This project is being developed incrementally using 'clean code' principles and 
 - Display formatted client table
 - Separation of concerns (UI / File / Logic)
 
+## Day 3 – Add Client + File Persistence
+- Add new client from user input
+- Validate unique account number
+- Append new client to file
+- Convert object to file format
+- Basic input handling improvements
+- Data persistence between program runs
+
+---
 
 ## Goals
 - Practice/enhance C++ fundamentals
