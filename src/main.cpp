@@ -149,6 +149,22 @@ void ShowClientsScreen()
     cin.get();
 }
 
+// Save all clients to file (used after delete/update)
+void SaveClientsToFile(const vector<Client>& clients)
+{
+    ofstream file(CLIENTS_FILE); // overwrite file
+
+    if (file.is_open())
+    {
+        for (const Client& client : clients)
+        {
+            file << ConvertClientToLine(client) << endl;
+        }
+
+        file.close();
+    }
+}
+
 // Converts a Client struct into a single line string for file storage
 string ConvertClientToLine(const Client& client)
 {
@@ -179,6 +195,21 @@ bool AccountExists(const string& accountNumber, const vector<Client>& clients)
         if (client.accountNumber == accountNumber)
             return true;
     }
+    return false;
+}
+
+// Find client by account number
+bool FindClientByAccountNumber(const string& accountNumber, vector<Client>& clients, Client& client)
+{
+    for (Client& c : clients)
+    {
+        if (c.accountNumber == accountNumber)
+        {
+            client = c;
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -229,6 +260,73 @@ void AddClientScreen()
 
 }
 
+// Print detailed client information
+void PrintClientCard(const Client& client)
+{
+    cout << "\nClient Information\n";
+    cout << "------------------------\n";
+    cout << "Account Number : " << client.accountNumber << endl;
+    cout << "PIN Code       : " << client.pinCode << endl;
+    cout << "Name           : " << client.name << endl;
+    cout << "Phone          : " << client.phone << endl;
+    cout << "Balance        : " << client.balance << endl;
+}
+
+// Delete client from vector
+bool DeleteClientByAccountNumber(const string& accountNumber, vector<Client>& clients)
+{
+    for (auto it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (it->accountNumber == accountNumber)
+        {
+            clients.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Screen to delete client
+void DeleteClientScreen()
+{
+    vector<Client> clients = LoadClientsFromFile();
+
+    cout << "\n=== Delete Client ===\n";
+
+    string accountNumber;
+    cout << "Enter Account Number to delete: ";
+    cin >> accountNumber;
+
+    Client client;
+
+    if (!FindClientByAccountNumber(accountNumber, clients, client))
+    {
+        cout << "Client not found.\n";
+        system("pause");
+        return;
+    }
+
+    PrintClientCard(client);
+
+    char answer;
+    cout << "\nAre you sure you want to delete this client? (y/n): ";
+    cin >> answer;
+
+    if (answer == 'y' || answer == 'Y')
+    {
+        DeleteClientByAccountNumber(accountNumber, clients);
+        SaveClientsToFile(clients);
+
+        cout << "\nClient deleted successfully.\n";
+    }
+    else
+    {
+        cout << "\nDelete cancelled.\n";
+    }
+
+    system("pause");
+}
 
 
 
@@ -252,6 +350,10 @@ void RunApplication()
         case MainMenuOption::AddClient:
             AddClientScreen();
             break;
+		
+		case MainMenuOption::DeleteClient:
+			DeleteClientScreen();
+			break;
 
         case MainMenuOption::Exit:
             cout << "Exiting program.\n";
