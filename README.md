@@ -27,6 +27,14 @@ This project is being developed incrementally using 'clean code' principles and 
 - Basic input handling improvements
 - Data persistence between program runs
 
+## Day 4 – Delete Client
+- Search client by account number
+- Display client details before deletion
+- Confirmation prompt before removing a client
+- Remove client from memory
+- Rewrite the clients file after deletion to maintain data integrity
+- Prevent accidental deletions through user confirmation
+
 ---
 
 ## Goals
