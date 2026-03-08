@@ -225,6 +225,8 @@ void AddClientScreen()
     SaveClientToFile(newClient);
 
     cout << "Client added successfully.\n";
+    system("pause"); // Wait for user to press a key before returning to menu
+
 }
 
 
