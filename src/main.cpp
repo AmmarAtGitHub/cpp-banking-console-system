@@ -329,6 +329,77 @@ void DeleteClientScreen()
 }
 
 
+// Update client fields except account number
+void EditClient(Client& client)
+{
+    cout << "Enter new PIN Code: ";
+    cin >> client.pinCode;
+
+    cin.ignore();
+
+    cout << "Enter new Name: ";
+    getline(cin, client.name);
+
+    cout << "Enter new Phone: ";
+    getline(cin, client.phone);
+
+    cout << "Enter new Balance: ";
+    cin >> client.balance;
+}
+
+// Update client using account number
+bool UpdateClientByAccountNumber(const string& accountNumber, vector<Client>& clients)
+{
+    for (Client& client : clients)
+    {
+        if (client.accountNumber == accountNumber)
+        {
+            PrintClientCard(client);
+
+            char answer;
+            cout << "\nAre you sure you want to update this client? (y/n): ";
+            cin >> answer;
+
+            if (answer == 'y' || answer == 'Y')
+            {
+                EditClient(client);
+
+                SaveClientsToFile(clients);
+
+                cout << "\nClient updated successfully.\n";
+                return true;
+            }
+
+            cout << "\nUpdate cancelled.\n";
+            return false;
+        }
+    }
+
+    cout << "\nClient not found.\n";
+    return false;
+}
+
+// Screen to update client
+void UpdateClientScreen()
+{
+    system("cls");
+
+    cout << "=====================================\n";
+    cout << "        Update Client Screen\n";
+    cout << "=====================================\n";
+
+    vector<Client> clients = LoadClientsFromFile();
+
+    string accountNumber;
+
+    cout << "Enter Account Number to update: ";
+    cin >> accountNumber;
+
+    UpdateClientByAccountNumber(accountNumber, clients);
+
+    system("pause");
+}
+
 
 // Runs the main application 
 void RunApplication()
@@ -354,10 +425,16 @@ void RunApplication()
 		case MainMenuOption::DeleteClient:
 			DeleteClientScreen();
 			break;
+			
+		case MainMenuOption::UpdateClient:
+            UpdateClientScreen();
+            break;
 
         case MainMenuOption::Exit:
             cout << "Exiting program.\n";
             break;
+		
+
 
         default:
             cout << "Feature not implemented yet.\n";
