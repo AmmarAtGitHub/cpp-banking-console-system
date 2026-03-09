@@ -35,6 +35,14 @@ This project is being developed incrementally using 'clean code' principles and 
 - Rewrite the clients file after deletion to maintain data integrity
 - Prevent accidental deletions through user confirmation
 
+## Day 5 – Update Client
+- Search client by account number
+- Display client information before update
+- Confirmation prompt before modifying data
+- Update client fields (PIN, Name, Phone, Balance)
+- Preserve the account number as a unique identifier
+- Rewrite the clients file with the updated client data
+
 ---
 
 ## Goals
