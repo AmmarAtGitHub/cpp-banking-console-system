@@ -400,6 +400,37 @@ void UpdateClientScreen()
     system("pause");
 }
 
+// Screen to find and display a client
+void FindClientScreen()
+{
+    system("cls");
+
+    cout << "=====================================\n";
+    cout << "        Find Client Screen\n";
+    cout << "=====================================\n";
+
+    vector<Client> clients = LoadClientsFromFile();
+
+    string accountNumber;
+
+    cout << "Enter Account Number: ";
+    cin >> accountNumber;
+
+    Client client;
+
+    if (FindClientByAccountNumber(accountNumber, clients, client))
+    {
+        PrintClientCard(client);
+    }
+    else
+    {
+        cout << "\nClient with Account Number ("
+            << accountNumber
+            << ") not found.\n";
+    }
+
+    system("pause");
+}
 
 // Runs the main application 
 void RunApplication()
@@ -428,6 +459,10 @@ void RunApplication()
 			
 		case MainMenuOption::UpdateClient:
             UpdateClientScreen();
+            break;
+
+        case MainMenuOption::FindClient:
+            FindClientScreen();
             break;
 
         case MainMenuOption::Exit:
