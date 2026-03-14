@@ -43,7 +43,7 @@ This project is being developed incrementally using 'clean code' principles and 
 - Preserve the account number as a unique identifier
 - Rewrite the clients file with the updated client data
 
-# Day 6 – Find Client
+## Day 6 – Find Client
 - Search client by account number
 - Display client information if found
 - Show error message if account does not exist
