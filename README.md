@@ -52,5 +52,5 @@ This project is being developed incrementally using 'clean code' principles and 
 ---
 
 ## Goals
-- Practice/enhance C++ fundamentals
+- refresh/practice/enhance C++ fundamentals
 - Improve software design thinking
