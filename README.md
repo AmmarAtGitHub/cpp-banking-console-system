@@ -49,6 +49,14 @@ This project is being developed incrementally using 'clean code' principles and 
 - Show error message if account does not exist
 - Reuse existing search and display functions
 
+## Day 7 – Transactions
+- Deposit money into client account
+- Withdraw money with balance validation
+- Prevent overdrawing (no negative balance)
+- Show total balances across all clients
+- Separate transactions menu for better UX
+- Persist updated balances to file after each transaction
+
 ---
 
 ## Goals
