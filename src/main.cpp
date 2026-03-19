@@ -21,6 +21,15 @@ enum class MainMenuOption : short {
     Exit
 };
 
+// Enum for transactions menu options
+// Keeps menu choices readable and type-safe
+enum class TransactionsMenuOption : short {
+    Deposit = 1,
+    Withdraw,
+    ShowTotalBalances,
+    BackToMainMenu
+};
+
 // Structure representing a bank client
 // This groups related data together
 struct Client {
@@ -45,6 +54,21 @@ void PrintMainMenu()
     cout << "[5] Find Client\n";
     cout << "[6] Transactions\n";
     cout << "[7] Exit\n";
+    cout << "=====================================\n";
+}
+
+// Displays the transactions menu
+void PrintTransactionsMenu()
+{
+    system("cls"); // clear console (Windows)
+
+    cout << "=====================================\n";
+    cout << "        Transactions Menu\n";
+    cout << "=====================================\n";
+    cout << "[1] Deposit\n";
+    cout << "[2] Withdraw\n";
+    cout << "[3] Show Total Balances\n";
+    cout << "[4] Back to Main Menu\n";
     cout << "=====================================\n";
 }
 
@@ -435,6 +459,179 @@ void FindClientScreen()
     system("pause");
 }
 
+// Adds money to a client's balance
+void DepositToClient(Client& client)
+{
+    double amount;
+
+    cout << "Enter amount to deposit: ";
+    cin >> amount;
+
+    // Validate input
+    if (amount <= 0)
+    {
+        cout << "Invalid amount.\n";
+        return;
+    }
+
+    // Update balance
+    client.balance += amount;
+
+    cout << "Deposit successful.\n";
+    cout << "New balance: " << client.balance << "\n";
+}
+
+// Withdraws money from a client's balance
+void WithdrawFromClient(Client& client)
+{
+    double amount;
+
+    cout << "Enter amount to withdraw: ";
+    cin >> amount;
+
+    // Check if amount is valid and does not exceed balance
+    if (amount <= 0)
+    {
+        cout << "Invalid amount.\n";
+        return;
+    }
+
+    if (amount > client.balance)
+    {
+        cout << "Insufficient balance.\n";
+        return;
+    }
+
+    // Deduct amount
+    client.balance -= amount;
+
+    cout << "Withdrawal successful.\n";
+    cout << "New balance: " << client.balance << "\n";
+}
+
+// Withdraws money from a client's balance
+void WithdrawFromClient(Client& client)
+{
+    double amount;
+
+    cout << "Enter amount to withdraw: ";
+    cin >> amount;
+
+    // Check if amount is valid and does not exceed balance
+    if (amount <= 0)
+    {
+        cout << "Invalid amount.\n";
+        return;
+    }
+
+    if (amount > client.balance)
+    {
+        cout << "Insufficient balance.\n";
+        return;
+    }
+
+    // Deduct amount
+    client.balance -= amount;
+
+    cout << "Withdrawal successful.\n";
+    cout << "New balance: " << client.balance << "\n";
+}
+
+// Handles the transactions workflow
+void TransactionsScreen()
+{
+    short choice = 0;
+
+    do
+    {
+        // Load latest data from file
+        vector<Client> clients = LoadClientsFromFile();
+
+        PrintTransactionsMenu();
+
+        cout << "Choose an option (1-4): ";
+        cin >> choice;
+
+        string accountNumber;
+        Client client;
+
+        switch (static_cast<TransactionsMenuOption>(choice))
+        {
+        case TransactionsMenuOption::Deposit:
+        {
+            cout << "Enter Account Number: ";
+            cin >> accountNumber;
+
+            // Find client
+            if (FindClientByAccountNumber(accountNumber, clients, client))
+            {
+                // Modify the actual client inside vector
+                for (Client& c : clients)
+                {
+                    if (c.accountNumber == accountNumber)
+                    {
+                        DepositToClient(c);
+                        break;
+                    }
+                }
+
+                // Save updated data
+                SaveClientsToFile(clients);
+            }
+            else
+            {
+                cout << "Account not found.\n";
+            }
+
+            system("pause");
+            break;
+        }
+
+        case TransactionsMenuOption::Withdraw:
+        {
+            cout << "Enter Account Number: ";
+            cin >> accountNumber;
+
+            if (FindClientByAccountNumber(accountNumber, clients, client))
+            {
+                for (Client& c : clients)
+                {
+                    if (c.accountNumber == accountNumber)
+                    {
+                        WithdrawFromClient(c);
+                        break;
+                    }
+                }
+
+                SaveClientsToFile(clients);
+            }
+            else
+            {
+                cout << "Account not found.\n";
+            }
+
+            system("pause");
+            break;
+        }
+
+        case TransactionsMenuOption::ShowTotalBalances:
+            ShowTotalBalances(clients);
+            system("pause");
+            break;
+
+        case TransactionsMenuOption::BackToMainMenu:
+            cout << "Returning to main menu...\n";
+            break;
+
+        default:
+            cout << "Invalid option.\n";
+            system("pause");
+        }
+
+    } while (choice != static_cast<short>(TransactionsMenuOption::BackToMainMenu));
+}
+
+
 // Runs the main application 
 void RunApplication()
 {
@@ -467,6 +664,10 @@ void RunApplication()
         case MainMenuOption::FindClient:
             FindClientScreen();
             break;
+
+		case MainMenuOption::Transactions:
+    		TransactionsScreen();
+    		break;
 
         case MainMenuOption::Exit:
             cout << "Exiting program.\n";
