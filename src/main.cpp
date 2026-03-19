@@ -149,6 +149,17 @@ void ShowClientsScreen()
     cin.get();
 }
 
+// Converts a Client struct into a single line string for file storage
+string ConvertClientToLine(const Client& client)
+{
+    return client.accountNumber + "#//#" +
+        client.pinCode + "#//#" +
+        client.name + "#//#" +
+        client.phone + "#//#" +
+        to_string(client.balance);
+}
+
+
 // Save all clients to file (used after delete/update)
 void SaveClientsToFile(const vector<Client>& clients)
 {
@@ -165,15 +176,7 @@ void SaveClientsToFile(const vector<Client>& clients)
     }
 }
 
-// Converts a Client struct into a single line string for file storage
-string ConvertClientToLine(const Client& client)
-{
-    return client.accountNumber + "#//#" +
-        client.pinCode + "#//#" +
-        client.name + "#//#" +
-        client.phone + "#//#" +
-        to_string(client.balance);
-}
+
 
 // Appends a new client to the clients file
 void SaveClientToFile(const Client& client)
